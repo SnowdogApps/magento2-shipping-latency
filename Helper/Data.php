@@ -89,6 +89,18 @@ class Data extends AbstractHelper
         return $latencyData[$shippingLatencyId];
     }
 
+    public function isShippingLatencyAllowed($product): bool
+    {
+        $productQty = $product->getQty();
+        $isShownInStock = $product->getData('display_instock_frontend');
+
+        if ($isShownInStock && $productQty <= 0) {
+            $isShownInStock = false;
+        }
+
+        return (bool) $isShownInStock;
+    }
+
     private function getCmsBlockContent(string $blockId)
     {
         try {
@@ -138,6 +150,4 @@ class Data extends AbstractHelper
     {
         return empty($productData['shipping_latency']) ? null : $productData['shipping_latency'];
     }
-
-
 }
