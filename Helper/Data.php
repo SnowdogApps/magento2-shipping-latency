@@ -2,6 +2,7 @@
 
 namespace Snowdog\ShippingLatency\Helper;
 
+use Magento\Catalog\Model\Product;
 use Magento\Cms\Model\BlockRepository;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
@@ -91,10 +92,15 @@ class Data extends AbstractHelper
 
     public function isShippingLatencyAllowed($product): bool
     {
-        $productQty = $product->getQty();
+        /** @var Product $product */
+        $isSalable = $product->getIsSalable();
         $isShownInStock = $product->getData('display_instock_frontend');
+        // below the validation for products with no display_instock_frontend set
+        if ($isShownInStock === null) {
+            $isShownInStock = true;
+        }
 
-        if ($isShownInStock && $productQty <= 0) {
+        if ($isShownInStock && !$isSalable) {
             $isShownInStock = false;
         }
 
