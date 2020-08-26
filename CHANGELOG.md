@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## [Unreleased]
+* Enabled Magento `2.4` support in `composer.json`
 
 ## [1.1.1] 2020-05-29
 * Fixed changelog file release numbers
