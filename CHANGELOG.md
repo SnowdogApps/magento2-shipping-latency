@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## [Unreleased]
+* 71448: fixed formatting and removed in stock button with modal
 
 ## [1.1.1] 2020-05-29
 * Fixed changelog file release numbers
