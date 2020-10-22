@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [1.2.0] 2020-10-22
+* Enabled Magento `2.4` support in `composer.json`
+* 71448: fixed formatting and removed in stock button with modal
+
 ## [1.1.1] 2020-05-29
 * Fixed changelog file release numbers
 
