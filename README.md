@@ -45,4 +45,4 @@ $shippingLatencyHelper->getProductPopupHtml($product->getData());
 Shipping latency options are configured on admin `Stores -> Configuration -> Snowdog -> Shipping Latency`.
 
 
-Default options are settend as previous module version to mantain retrocompatibility.
+Default options are set as the previous module version to maintain retro compatibility.
