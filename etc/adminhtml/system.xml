@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="snowdog" translate="label" sortOrder="10">
+            <label>Snowdog</label>
+        </tab>
+        <section id="shipping_latency" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Shipping Latency</label>
+            <tab>snowdog</tab>
+            <resource>Magento_Catalog::config</resource>
+            <group id="options"
+                   translate="label"
+                   type="text"
+                   sortOrder="80"
+                   showInDefault="1"
+                   showInWebsite="1"
+                   showInStore="1"
+            >
+                <label>Shipping Latency Options</label>
+                <field id="mapping" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Snowdog\ShippingLatency\Block\Adminhtml\Form\Field\LatencyOptions</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

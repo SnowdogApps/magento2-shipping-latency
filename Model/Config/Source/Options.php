@@ -5,6 +5,7 @@ namespace Snowdog\ShippingLatency\Model\Config\Source;
 use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 use Magento\Eav\Model\ResourceModel\Entity\AttributeFactory;
 use Magento\Framework\DB\Ddl\Table;
+use Snowdog\ShippingLatency\Helper\Data;
 
 class Options extends AbstractSource
 {
@@ -13,53 +14,25 @@ class Options extends AbstractSource
      */
     private $attributeFactory;
 
-    public function __construct(
-        AttributeFactory $attributeFactory
-    )
-    {
-        $this->attributeFactory = $attributeFactory;
-    }
-
     /**
-     * Get all options
-     *
-     * @return array
+     * @var Data
      */
-    public function getAllOptions()
-    {
-        $this->_options = [
-            [
-                'label' => __('None'),
-                'value' => ''
-            ],
-            [
-                'label' => __('More On The Way'),
-                'value' => '1'
-            ],
-            [
-                'label' => __('Back Ordered'),
-                'value' => '3'
-            ],
-            [
-                'label' => __('Custom Order'),
-                'value' => '7'
-            ],
-            [
-                'label' => __('Expanded Lead Time'),
-                'value' => '8'
-            ],
-            [
-                'label' => __('Sold Out'),
-                'value' => '9'
-            ]
-        ];
+    private Data $helper;
 
-        return $this->_options;
+    public function __construct(
+        AttributeFactory $attributeFactory,
+        Data $helper
+    ) {
+        $this->attributeFactory = $attributeFactory;
+        $this->helper = $helper;
+    }
+
+    public function getAllOptions(): array
+    {
+        return $this->helper->getLatencyData();
     }
 
     /**
-     * Get a text for option value
-     *
      * @param string|integer $value
      * @return string|bool
      */
