@@ -36,7 +36,8 @@ class Data extends AbstractHelper
     /**
      * Data constructor.
      * @param Context $context
-     * @param BlockRepository $block
+     * @param BlockRepository $blockRepository
+     * @param Json $jsonSerializer
      */
     public function __construct(
         Context $context,
@@ -48,14 +49,17 @@ class Data extends AbstractHelper
         $this->jsonSerializer = $jsonSerializer;
     }
 
+    /**
+     * @return array
+     */
     public function getLatencyData()
     {
         if (empty($this->latencyData)) {
             $latencyDataConfiguration = $this->getShippingLatencyConfiguration();
             foreach ($latencyDataConfiguration as $key => $latencyDataOption) {
-                $this->latencyData[] = [
+                $this->latencyData[trim($key, '_')] = [
                     'label' => __($latencyDataOption['title']),
-                    'value' => trim($key, '_'), // it removes "_" for retro compatibility indexes
+                    'value' => trim($key, '_'),
                     'title' => __($latencyDataOption['title']),
                     'btnClass' => $latencyDataOption['button_class'] ?? $latencyDataOption['cms_block'],
                     'popupHtml' => $this->getCmsBlockContent($latencyDataOption['cms_block']),
@@ -97,7 +101,7 @@ class Data extends AbstractHelper
         return (bool) $isShownInStock;
     }
 
-    private function getCmsBlockContent(string $blockId)
+    private function getCmsBlockContent(string $blockId): string
     {
         try {
             $cmsBlock = $this->blockRepository->getById($blockId);
