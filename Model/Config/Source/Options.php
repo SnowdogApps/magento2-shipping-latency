@@ -17,7 +17,7 @@ class Options extends AbstractSource
     /**
      * @var Data
      */
-    private Data $helper;
+    private $helper;
 
     public function __construct(
         AttributeFactory $attributeFactory,
