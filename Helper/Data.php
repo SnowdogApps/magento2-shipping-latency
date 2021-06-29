@@ -56,6 +56,10 @@ class Data extends AbstractHelper
     {
         if (empty($this->latencyData)) {
             $latencyDataConfiguration = $this->getShippingLatencyConfiguration();
+            $this->latencyData[] = [
+                'label' => __('None'),
+                'value' => null
+            ];
             foreach ($latencyDataConfiguration as $key => $latencyDataOption) {
                 $this->latencyData[trim($key, '_')] = [
                     'label' => __($latencyDataOption['title']),
