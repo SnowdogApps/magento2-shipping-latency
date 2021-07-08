@@ -4,9 +4,11 @@ namespace Snowdog\ShippingLatency\Helper;
 
 use Magento\Catalog\Model\Product;
 use Magento\Cms\Model\BlockRepository;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Serialize\Serializer\Json;
 
 /**
  * Class Data
@@ -14,64 +16,60 @@ use Magento\Framework\Exception\LocalizedException;
  */
 class Data extends AbstractHelper
 {
+    const XML_PATH_SHIPPING_LATENCY_CONFIGURATION = 'shipping_latency/options/mapping';
 
     /**
      * @var array
      */
     public $latencyData = [];
+
     /**
      * @var BlockRepository
      */
     private $blockRepository;
 
     /**
+     * @var Json
+     */
+    private $jsonSerializer;
+
+    /**
      * Data constructor.
      * @param Context $context
-     * @param BlockRepository $block
+     * @param BlockRepository $blockRepository
+     * @param Json $jsonSerializer
      */
     public function __construct(
         Context $context,
-        BlockRepository $blockRepository
+        BlockRepository $blockRepository,
+        Json $jsonSerializer
     ) {
         parent::__construct($context);
         $this->blockRepository = $blockRepository;
+        $this->jsonSerializer = $jsonSerializer;
     }
 
+    /**
+     * @return array
+     */
     public function getLatencyData()
     {
         if (empty($this->latencyData)) {
-            $this->latencyData = [
-                1 => [
-                    'title' => __('More On The Way'),
-                    'btnClass' => 'more-on-the-way',
-                    'popupHtml' => $this->getCmsBlockContent('more_on_the_way'),
-                    'popupId' => 'more-on-the-way-confirm',
-                ],
-                3 => [
-                    'title' => __('Back Ordered'),
-                    'btnClass' => 'back-ordered',
-                    'popupHtml' => $this->getCmsBlockContent('back_ordered'),
-                    'popupId' => 'back-ordered-confirm',
-                ],
-                7 => [
-                    'title' => __('Custom Order'),
-                    'btnClass' => 'custom-order',
-                    'popupHtml' => $this->getCmsBlockContent('custom_order'),
-                    'popupId' => 'custom-order-confirm',
-                ],
-                8 => [
-                    'title' => __('Expanded Lead Time'),
-                    'btnClass' => 'expanded-lead-time-confirm',
-                    'popupHtml' => $this->getCmsBlockContent('expanded_lead_time'),
-                    'popupId' => 'expanded-lead-time-confirm'
-                ],
-                9 => [
-                    'title' => __('Sold Out'),
-                    'btnClass' => 'sold-out',
-                    'popupHtml' => $this->getCmsBlockContent('sold_out'),
-                    'popupId' => 'sold-out'
-                ]
+            $latencyDataConfiguration = $this->getShippingLatencyConfiguration();
+            $this->latencyData[] = [
+                'label' => __('None'),
+                'value' => null
             ];
+            foreach ($latencyDataConfiguration as $key => $latencyDataOption) {
+                $this->latencyData[trim($key, '_')] = [
+                    'label' => __($latencyDataOption['title']),
+                    'value' => trim($key, '_'),
+                    'title' => __($latencyDataOption['title']),
+                    'btnClass' => $latencyDataOption['button_class'] ?? $latencyDataOption['cms_block'],
+                    'popupHtml' => $this->getCmsBlockContent($latencyDataOption['cms_block']),
+                    'popupId' => $latencyDataOption['popup_id'] ?? $latencyDataOption['cms_block'],
+                ];
+            }
         }
         return $this->latencyData;
     }
@@ -107,7 +105,7 @@ class Data extends AbstractHelper
         return (bool) $isShownInStock;
     }
 
-    private function getCmsBlockContent(string $blockId)
+    private function getCmsBlockContent(string $blockId): string
     {
         try {
             $cmsBlock = $this->blockRepository->getById($blockId);
@@ -147,6 +145,12 @@ class Data extends AbstractHelper
         return $latencyData[$shippingLatencyId]['title'];
     }
 
+    public function getShippingLatencyConfiguration(
+        string $scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT
+        ): array {
+            $value = $this->scopeConfig->getValue(self::XML_PATH_SHIPPING_LATENCY_CONFIGURATION, $scope);
+            return !empty($value) ? $this->jsonSerializer->unserialize($value) : [];
+    }
 
     /**
      * @param array $productData
