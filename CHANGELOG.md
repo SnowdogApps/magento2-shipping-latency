@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+## [1.3.0] 2021-07-08
+* 71475 - Make shipping latency options and CMS blocks mapping configurable
+
 ## [1.2.0] 2020-10-22
 * Enabled Magento `2.4` support in `composer.json`
 * 71448: fixed formatting and removed in stock button with modal
