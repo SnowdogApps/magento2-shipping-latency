@@ -1,0 +1,8 @@
+#row_shipping_latency_options_mapping td.value
+{
+    width: 100%;
+}
+#row_shipping_latency_options_mapping td.label
+{
+    display: none;
+}
